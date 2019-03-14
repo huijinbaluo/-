@@ -1,0 +1,20 @@
+f = open('input.txt','r')
+s=int(f.read())
+f.close()
+
+mylist = []
+
+def zzls(n):
+    c=123
+    if n==1:
+        mylist.append(c)
+    for i in range(2, n+1):
+        if n % i == 0:
+             zzls(n//i)
+#s = int(input('请输入一个正整数：'))
+zzls(s)
+print(len(mylist))
+
+k = open('output.txt','w')
+k.write(str(len(mylist)))
+k.close()
