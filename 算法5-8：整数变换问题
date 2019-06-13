@@ -1,0 +1,64 @@
+
+f = open("work5-8 input.txt","r")
+s= f.read()
+f.close()
+lastSum = []  # 记录变换序列
+lastNum = []  # 记录变换次数
+a = []  # 读取iwork5-8 input.txt里的数据
+a = s.split() #切割txt文本里的数据，按空格或回车符来分开元素
+a = [int(x) for x in a]#转整型方便比较
+
+# ------------------------------
+m = a[0]
+n = a[1]
+print("给定的变换式子分别是： f(i)=i*3 ，g(i)=i/2")
+print("输入的数分别是：",m,n)
+
+
+def f(i):#定义题中给定的变换式
+    return 3 * i
+
+
+def g(i):#定义题中给定的变换式
+    return int(i / 2)  # 取下整
+
+
+def BackTree(x, y):#自定回溯法函数
+    lastNum.append(1)#每次运行BackTree函数都要添加到数组中，方便后面计算长度即可得到最少次数
+    if (x > y):
+        lastSum.append("g") #若满足x>y，则运行g（i）=i/2
+        num = g(x) #存储计算后的g（i）的结果，并赋值到递归函数中
+
+        if (num == y): #结束条件
+            print("变换次数：",len(lastSum))
+            for i in reversed(lastSum): #reversed是python中的迭代器对象，为了避免多次调用lastSum产生重复的值，
+                # 每次重复只单次打印lastSum
+                print(i)
+            global NewSum #定义全局变量将 lastSum的长度传出去写到文本中
+            NewSum = len(lastSum)
+            return NewSum
+            exit() #退出
+        if (len(lastNum) >= 50):#若长度超过50，即已经调用50次函数后还无法计算出来，则判断无法计算出来根据实际情况更改限定值
+            print("无法转换")
+            exit()
+        BackTree(num, y)
+    else: #同上，与上一个类似，判断x<y的情况
+        lastSum.append("f")
+        num = f(x) #存储计算后的f（i）的结果，并赋值到递归函数中
+        if (num == y): #结束条件
+            print("变换次数：", len(lastSum))
+            exit()
+        if (len(lastNum) >= 50):
+            print("无法转换")
+            exit()
+        BackTree(num, y)
+
+BackTree(m, n) #调用
+
+
+ls = lastSum[::-1]
+k=open('work5-8 output.txt','w')
+k.write(str(NewSum)+"\n") #定义的全局变量在此用上
+k.write(str(ls))
+k.close()
+print("运行成功，请查看work5-8 output文件")
