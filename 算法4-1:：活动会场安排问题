@@ -1,0 +1,42 @@
+f=open('work4-1 input.txt','r')
+s=f.read()#将读取到的值赋给变量s
+f.close()#养成好习惯，记得关闭文件
+
+lastSum =[]  #存储满足条件的元素，因函数里的变量无法传送出来，所以以计算存放的元素个数作为参考
+lastSum.append(1)#比较开始时间和结束时间时，首先要确定第一个活动占用了一个场所，
+# 存在第一个场才可以比较后面的其他活动的开始时间，所以首先添加一个元素进去，是何值无所谓
+a = []#存储input文件的数据流
+a = s.split()#分割在input中读取到的数据流
+n=int(a[0])#读取第一位数组元素，存储为活动的总个数
+print("总计需要安排",a[0],"个活动")
+
+beg = []#存储开始时间
+for i in range(1,len(a),2):#切割a[]中的元素，将开始时间存放到次列表里
+    beg.append(a[i])
+
+end = []#存储结束时间
+for i in range(2, len(a), 2):#切割a[]中的元素，将结束时间存放到次列表里
+    end.append(a[i])
+
+s = [int(x) for x in beg]#转整型方便比较
+e = [int(x) for x in end]
+print("未转整型的开始时间列表为：", beg)
+print("未转整型的结束时间为列表：", end)
+print("转整型后的开始时间列表为：", s)
+print("转整型后的结束时间为列表：", e)
+
+
+def GetSum(s=[],f=[]):#定义贪心算法，变量是列表
+    j=0
+    for i in range(len(s)):#判断
+        if s[i]>=f[j]:#如果第下个活动的开始时间大于或等于上个活动的结束时间
+            lastSum.append(i)#满足则添加随意元素进lastSum[]列表里，后期用len（）方法计算长度即可
+            j=i#将循环的i赋值给j，即将满足同一个活动场所的两个活动，将第一个活动的结束时间换为第二个活动的结束时间来比较第三个活动
+
+GetSum(s,e)
+b=len(lastSum)#转string输出到output文件
+
+k=open('work4-1 output.txt','w')
+k.write(str(b))
+k.close()
+print("运行成功，请查看work4-1 output文件")
