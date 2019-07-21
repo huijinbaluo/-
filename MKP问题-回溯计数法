@@ -1,0 +1,70 @@
+#----首先需要在py文件的当前目录下创建MKP input.txt，
+#----并将测试的数据按照格式粘贴到该文档下。
+import time as t
+start =t.time()
+
+def backtrack(i):   #回溯法计算不同的组合并赋值到posibility列表中
+  global curSX,snum
+  if i>=n:
+      posibility.append(snum[:])
+  else:
+    if curSX+shuxing[i]<=xztj:
+        snum[i]=value[i]
+        curSX+=shuxing[i]
+        backtrack(i+1)
+        curSX-=shuxing[i]
+        snum[i]=0
+    backtrack(i+1)
+
+def check(num):
+    a = 0
+    print("正在计算最大值...")
+    print("比较中...")
+    for i in num:
+        if num.count(i)==sp_m and sum(i)>a:
+            a = sum(i)
+            bestV = i
+            print("当前所选的最大价值为：",sum(i),i)
+    print('\n')
+    print('\n商品个数：',n,"属性个数:",sp_m)
+    print("价值为：",value)
+    for i in range(len(bestV)):
+        if bestV[i]!=0:
+            print('选中第%i个商品,价值'%(i+1),value[i],end='元 |  ')
+    print("\n数据中给定的最佳价值为：",bv,'元')
+    print("算法计算得出的最大值为：",a,'元')
+
+
+if __name__ == '__main__':
+    f1 = open("MKP input.txt")  # 读取文本数据
+    first_input = f1.read()
+    #print("最开始读入的数据：",first_input)
+    first_data = first_input.split()  # 切割文本数据
+    f1.close()
+    all_data = [float(s) for s in first_data]   #转单精度型，便于计算
+    #print("切割后的数据：",all_data)
+    n = int(all_data[0])  # 读入商品数
+    sp_m = int(all_data[1])  # 读入属性个数
+    bv = float(all_data[2]) #读入最佳价格
+    constraints =list(map(float,all_data[-sp_m:]))  # 读入约束条件
+    #print("约束条件为：",constraints)
+    value = list(map(float,all_data[3:n+3])) # 读入商品的价值
+    #print("商品价值为：",value)
+    secend_data = first_input.split('\n')  # 切割文本数据
+    all_shuxing = []
+    for i in range(2, sp_m + 2):
+        all_shuxing.append(list(map(int, secend_data[i].split())))  # 添加数据到列表中
+    #print("属性分别为",all_shuxing)
+    curSX = 0   #当前的限制条件数
+    posibility = []  # 记录符合各个限制条件的组合
+    snum = [0 for i in range(n)]    #遍历的记录，默认设为[0,0,0,0,0....]
+    for m in range(0, sp_m):
+        print("正在执行计算...")
+        xztj = constraints[m]   #限制条件
+        shuxing = all_shuxing[m]    #属性
+        backtrack(0)
+    posibility = posibility[:-1]    #去除最后一个可能性，因为是都不选的，无意义
+    check(posibility) #传递参数，并输出
+
+    end = t.time()
+    print("所耗时间为：",end - start)
